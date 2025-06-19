@@ -69,7 +69,10 @@ export default function SignIn() {
                 type="email"
                 id="email"
                 value={emailAddress}
-                onChange={(e) => setEmailAddress(e.target.value)}
+                onChange={(e) => {
+                  setEmailAddress(e.target.value);
+                  setError("");
+                }}
                 required
               />
             </div>
@@ -80,7 +83,10 @@ export default function SignIn() {
                   type="password"
                   id="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError("");
+                  }}
                   required
                 />
               </div>

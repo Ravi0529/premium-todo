@@ -99,7 +99,10 @@ export default function SignUp() {
                   type="email"
                   id="email"
                   value={emailAddress}
-                  onChange={(e) => setEmailAddress(e.target.value)}
+                  onChange={(e) => {
+                    setEmailAddress(e.target.value);
+                    setError("");
+                  }}
                   required
                 />
               </div>
@@ -110,7 +113,10 @@ export default function SignUp() {
                     type="password"
                     id="password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setError("");
+                    }}
                     required
                   />
                 </div>
@@ -131,7 +137,10 @@ export default function SignUp() {
                 <Input
                   id="code"
                   value={code}
-                  onChange={(e) => setCode(e.target.value)}
+                  onChange={(e) => {
+                    setCode(e.target.value);
+                    setError("");
+                  }}
                   placeholder="Enter verfication code"
                   required
                 />
