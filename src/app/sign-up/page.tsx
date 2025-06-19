@@ -24,7 +24,6 @@ export default function SignUp() {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -108,23 +107,12 @@ export default function SignUp() {
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Input
-                    type={showPassword ? "text" : "password"}
+                    type="password"
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-500" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-gray-500" />
-                    )}
-                  </button>
                 </div>
               </div>
               {error && (
