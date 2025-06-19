@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 
+// just for testing purpose
 export async function GET() {
   return new Response("GET route is working", { status: 200 });
 }
@@ -15,9 +16,9 @@ export async function POST(req: Request) {
   }
 
   const headerPayload = headers();
-  const svix_id = (await headerPayload).get("svix_id");
-  const svix_timestamp = (await headerPayload).get("svix_timestamp");
-  const svix_signature = (await headerPayload).get("svix_signature");
+  const svix_id = (await headerPayload).get("svix-id");
+  const svix_timestamp = (await headerPayload).get("svix-timestamp");
+  const svix_signature = (await headerPayload).get("svix-signature");
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
     return new Response("Error occured - No svix headers");
@@ -31,9 +32,9 @@ export async function POST(req: Request) {
 
   try {
     evt = wh.verify(body, {
-      svix_id: svix_id,
-      svix_timestamp: svix_timestamp,
-      svix_signature: svix_signature,
+      "svix-id": svix_id,
+      "svix-timestamp": svix_timestamp,
+      "svix-signature": svix_signature,
     }) as WebhookEvent;
   } catch (error) {
     console.error("Error verifying webhook", error);
@@ -65,7 +66,7 @@ export async function POST(req: Request) {
           isSubscribed: false,
         },
       });
-      //   console.log("New user created", newUser);
+      // console.log("New user created", newUser);
     } catch (error) {
       return new Response("Error creating user in database", { status: 400 });
     }
