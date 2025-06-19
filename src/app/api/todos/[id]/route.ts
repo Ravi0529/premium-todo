@@ -79,16 +79,15 @@ export async function PUT(req: NextRequest) {
   try {
     const todoId = req.nextUrl.pathname.split("/").pop();
 
-    const body = await req.json();
-    const { title } = body;
+    const { completed } = await req.json();
 
-    if (!title) {
+    if (!completed) {
       return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
     }
 
     const existingTodo = await prisma.todo.findUnique({
       where: {
-        id: userId,
+        id: todoId,
       },
     });
 
@@ -110,22 +109,16 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await prisma.todo.update({
+    const updatedTodo = await prisma.todo.update({
       where: {
         id: todoId,
       },
       data: {
-        ...(title && { title }),
-        updatedAt: new Date(),
+        completed,
       },
     });
 
-    return NextResponse.json(
-      {
-        message: "Todo Edited Successfully",
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(updatedTodo);
   } catch (error) {
     console.error("Error fetching todos", error);
     return NextResponse.json(
