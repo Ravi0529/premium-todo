@@ -1,0 +1,138 @@
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
+
+export async function DELETE(req: NextRequest) {
+  const userId = (await auth()).userId;
+
+  if (!userId) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const todoId = req.nextUrl.pathname.split("/").pop();
+
+    const todo = await prisma.todo.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!todo) {
+      return NextResponse.json(
+        {
+          error: "Todo not found!",
+        },
+        { status: 404 }
+      );
+    }
+
+    if (todo.userId !== userId) {
+      return NextResponse.json(
+        {
+          error: "Forbidden",
+        },
+        { status: 403 }
+      );
+    }
+
+    await prisma.todo.delete({
+      where: {
+        id: todoId,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        message: "Todo Deleted Successfully",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching todos", error);
+    return NextResponse.json(
+      {
+        error: "Internal Server Error",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  const userId = (await auth()).userId;
+
+  if (!userId) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const todoId = req.nextUrl.pathname.split("/").pop();
+
+    const body = await req.json();
+    const { title } = body;
+
+    if (!title) {
+      return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
+    }
+
+    const existingTodo = await prisma.todo.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!existingTodo) {
+      return NextResponse.json(
+        {
+          error: "Todo not found!",
+        },
+        { status: 404 }
+      );
+    }
+
+    if (existingTodo.userId !== userId) {
+      return NextResponse.json(
+        {
+          error: "Forbidden",
+        },
+        { status: 403 }
+      );
+    }
+
+    await prisma.todo.update({
+      where: {
+        id: todoId,
+      },
+      data: {
+        ...(title && { title }),
+        updatedAt: new Date(),
+      },
+    });
+
+    return NextResponse.json(
+      {
+        message: "Todo Edited Successfully",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching todos", error);
+    return NextResponse.json(
+      {
+        error: "Internal Server Error",
+      },
+      { status: 500 }
+    );
+  }
+}
