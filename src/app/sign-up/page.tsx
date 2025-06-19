@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -28,9 +27,7 @@ export default function SignUp() {
   const router = useRouter();
 
   if (!isLoaded) {
-    return (
-      <Loader2 className="animate-spin h-7 w-7 flex justify-center items-center" />
-    );
+    return null;
   }
 
   const submit = async (e: React.FormEvent) => {
