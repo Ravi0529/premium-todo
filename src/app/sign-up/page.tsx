@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -23,8 +23,13 @@ export default function SignUp() {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+  const [mounted, setMounted] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (!isLoaded) {
     return null;
@@ -66,7 +71,7 @@ export default function SignUp() {
           "Verification incomplete. Please try again or check your code."
         );
         setPendingVerification(true);
-        return; // remove it if showing up error
+        return;
       }
 
       if (completeSignup.status === "complete") {
@@ -123,6 +128,7 @@ export default function SignUp() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
+              {mounted && <div id="clerk-captcha" />}
               <Button type="submit" className="w-full">
                 Sign Up
               </Button>
