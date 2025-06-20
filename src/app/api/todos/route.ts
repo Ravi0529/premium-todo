@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
   try {
     const todos = await prisma.todo.findMany({
       where: {
-        id: userId,
+        userId,
         title: {
           contains: search,
           mode: "insensitive",
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
     const todoItems = await prisma.todo.count({
       where: {
-        id: userId,
+        userId,
         title: {
           contains: search,
           mode: "insensitive",

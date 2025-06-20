@@ -6,39 +6,28 @@ export async function DELETE(req: NextRequest) {
   const userId = (await auth()).userId;
 
   if (!userId) {
-    return NextResponse.json(
-      {
-        error: "Unauthorized",
-      },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const todoId = req.nextUrl.pathname.split("/").pop();
+
+  if (!todoId || typeof todoId !== "string") {
+    return NextResponse.json({ error: "Invalid Todo ID" }, { status: 400 });
   }
 
   try {
-    const todoId = req.nextUrl.pathname.split("/").pop();
-
     const todo = await prisma.todo.findUnique({
       where: {
-        id: userId,
+        id: todoId,
       },
     });
 
     if (!todo) {
-      return NextResponse.json(
-        {
-          error: "Todo not found!",
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Todo not found" }, { status: 404 });
     }
 
     if (todo.userId !== userId) {
-      return NextResponse.json(
-        {
-          error: "Forbidden",
-        },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     await prisma.todo.delete({
@@ -47,14 +36,9 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(
-      {
-        message: "Todo Deleted Successfully",
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Todo deleted successfully" });
   } catch (error) {
-    console.error("Error fetching todos", error);
+    console.error("Error deleting todo", error);
     return NextResponse.json(
       {
         error: "Internal Server Error",

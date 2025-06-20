@@ -89,11 +89,13 @@ export default function Dashboard() {
         throw new Error("Failed to update todo");
       }
       await fetchTodos(currentPage);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleDeleteTodo = async (id: string) => {
-    const response = await fetch(`/api/todo/${id}`, {
+    const response = await fetch(`/api/todos/${id}`, {
       method: "DELETE",
     });
 
