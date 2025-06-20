@@ -17,21 +17,26 @@ const Navbar = () => {
   const { signOut } = useClerk();
 
   return (
-    <nav className="bg-background border-b">
+    <nav className="sticky top-0 z-30 w-full bg-background/80 backdrop-blur border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="ml-2 text-xl font-bold">TodoMaster</span>
-            </Link>
-          </div>
-          <div className="flex items-center">
+        <div className="flex justify-between items-center h-16">
+          <Link href="/" className="flex items-center gap-2 group select-none">
+            <img
+              src="/window.svg"
+              alt="TodoMaster Logo"
+              className="h-8 w-8 transition-transform group-hover:scale-105"
+            />
+            <span className="text-2xl font-extrabold text-black tracking-tight transition-colors group-hover:text-primary">
+              TodoMaster
+            </span>
+          </Link>
+          <div className="flex items-center gap-3">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="relative h-8 w-8 rounded-full"
+                    className="relative h-10 w-10 rounded-full p-0 border-2 border-muted-foreground/20 hover:border-primary/60 transition-shadow focus-visible:ring-2 focus-visible:ring-primary/40"
                   >
                     <Avatar>
                       <AvatarImage src={user.imageUrl} alt="User avatar" />
@@ -56,10 +61,20 @@ const Navbar = () => {
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="ghost" asChild className="mr-2">
+                <Button
+                  variant="default"
+                  asChild
+                  size="lg"
+                  className="px-5 font-semibold"
+                >
                   <Link href="/sign-in">Sign In</Link>
                 </Button>
-                <Button variant="outline" asChild>
+                <Button
+                  variant="outline"
+                  asChild
+                  size="lg"
+                  className="px-5 font-semibold"
+                >
                   <Link href="/sign-up">Sign Up</Link>
                 </Button>
               </>
